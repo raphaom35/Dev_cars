@@ -5,7 +5,11 @@ namespace DevCars.API.Entities
 {
     public class Order
     {
-        public Order(int id, int idCar, int idCurtumer,decimal price,List<ExtraOrderItem> items)
+        protected Order()
+        {
+
+        }
+        public Order( int idCar, int idCurtumer,decimal price,List<ExtraOrderItem> items)
         {
             this.id = id;
             IdCar = idCar;
@@ -17,7 +21,9 @@ namespace DevCars.API.Entities
         public int id { get; private set; }
         public int IdCar { get; private set; }
         public int IdCurtumer { get; private set; }
+        public Car Car { get; set; }
 
+        public Custumer Custumer { get; set; }
         public decimal TotalCost { get; private set; }
 
         public List<ExtraOrderItem> ExtraItems { get; private set; }
@@ -25,6 +31,10 @@ namespace DevCars.API.Entities
 
     public class ExtraOrderItem
     {
+        protected ExtraOrderItem()
+        {
+
+        }
         public ExtraOrderItem(string descrition, decimal price)
         {
             Descrition = descrition;

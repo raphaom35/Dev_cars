@@ -3,6 +3,7 @@ using DevCars.API.InputModels;
 using DevCars.API.Presistence;
 using DevCars.API.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,8 +22,9 @@ namespace DevCars.API.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] AddCustumerInputModel model)
         {
-            var custumer = new Custumer(4, model.FullName, model.Document, model.BirthDate);
+            var custumer = new Custumer( model.FullName, model.Document, model.BirthDate);
             _dbContext.Custumers.Add(custumer);
+            _dbContext.SaveChanges();
             return NoContent();
         }
         [HttpPost("{id}/orders")]
@@ -30,24 +32,28 @@ namespace DevCars.API.Controllers
         {
             var extraItems = model.ExtraItems.Select(e => new ExtraOrderItem(e.Description, e.Price)).ToList();
             var car = _dbContext.Cars.SingleOrDefault(c => c.id == model.IdCar);
-            var order = new Order(1, model.IdCar, model.IdCustumer, car.Price, extraItems);
-            var custumer = _dbContext.Custumers.SingleOrDefault(c => c.Id == model.IdCustumer);
-            custumer.Purchase(order);
+            var order = new Order( model.IdCar, model.IdCustumer, car.Price, extraItems);
+            //var custumer = _dbContext.Custumers.SingleOrDefault(c => c.Id == model.IdCustumer);
+            //custumer.Purchase(order);
+            _dbContext.Orders.Add(order);
+            _dbContext.SaveChanges();
             return CreatedAtAction(
                 
                 nameof(GetOrder),
-                new { id=custumer.Id, orderid=order.id },
+                new { id=order.IdCurtumer, orderid=order.id },
                 model);
         }
         [HttpGet("{id}/orders/{orderid}")]
         public IActionResult GetOrder(int id, int orderid)
         {
-            var custumer = _dbContext.Custumers.SingleOrDefault(c => c.Id == id);
-            if (custumer == null)
+    
+            var order = _dbContext.Orders
+                .Include(o=>o.ExtraItems)
+                .SingleOrDefault(o => o.id == orderid);
+            if (order == null)
             {
                 return NotFound();
             }
-            var order = custumer.Orders.SingleOrDefault(o => o.id == orderid);
             var extraItens = order.ExtraItems.Select(e => e.Descrition).ToList();
             var orderViewModel = new OrderDetailsViewModel(order.IdCar, order.IdCurtumer, order.TotalCost, extraItens);
             return Ok(orderViewModel);

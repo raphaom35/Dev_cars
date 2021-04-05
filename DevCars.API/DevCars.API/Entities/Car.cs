@@ -7,7 +7,11 @@ namespace DevCars.API.Entities
 {
     public class Car 
     {
-        public Car(int id, string brand, string model, string vinCode, decimal price, int year, string color, DateTime produtionDate)
+        protected Car()
+        {
+
+        }
+        public Car( string brand, string model, string vinCode, decimal price, int year, string color, DateTime produtionDate)
         {
             this.id = id;
             Brand = brand;

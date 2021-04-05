@@ -45,9 +45,9 @@ namespace DevCars.API.Controllers
             {
                 return BadRequest("Modelo no pode ser mais que 50 caracteres");
             }
-            var car = new Car(4,model.Brand,model.Model,model.VinCode,model.Price,model.Year,model.Color,model.ProdutionDate);
+            var car = new Car(model.Brand,model.Model,model.VinCode,model.Price,model.Year,model.Color,model.ProdutionDate);
             _dbContext.Cars.Add(car);
-
+            _dbContext.SaveChanges();
             return CreatedAtAction(
                 nameof(GetById),
                 new { id=car.id},
@@ -62,6 +62,7 @@ namespace DevCars.API.Controllers
                 return NotFound();
             }
             car.Update(model.Price, model.Color);
+            _dbContext.SaveChanges();
             return NoContent();
         }
         [HttpDelete("{id}")]
@@ -73,6 +74,7 @@ namespace DevCars.API.Controllers
                 return NotFound();
             }
             car.SetAsSuspended();
+            _dbContext.SaveChanges();
             return NoContent();
         }
     }
