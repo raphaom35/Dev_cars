@@ -22,7 +22,7 @@ Api to buy a car 🚗
 ## Features
 
 - 💻 **Asp Net Core  5.0** — A lib that provides a way to create api app
-- 🎲 **Sql Server** — Storage of data structure in memory
+- 🎲 **Sql Server** — Storage of data
 - ⚙ **Entity framework** —  persistence tools
 - 📄 **Swagger** —  API Documentation 
 
