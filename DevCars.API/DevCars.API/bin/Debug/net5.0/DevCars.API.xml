@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DevCars.API</name>
+    </assembly>
+    <members>
+        <member name="T:DevCars.API.Controllers.CarsController">
+            <summary>
+            Cadastrar um carros
+            </summary>
+            <remarks>
+            Requisição de exemplo
+            {
+                "brand":"Toyota",
+                "model":"Civic",
+                "vinCode":"abc123",
+                "year":2021,
+                "color":"Ciza",
+                "productionDate":"2021-05-04"
+            }
+            </remarks>
+            <param>Dados do carro </param>
+            <return>Objeto recém-criado</return>
+            <response code="201" >Objeto criado com sucesso</response>
+            <response code="404" >Dados invalidos</response>
+        </member>
+    </members>
+</doc>

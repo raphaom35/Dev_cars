@@ -1,8 +1,11 @@
-﻿using DevCars.API.Entities;
+﻿using Dapper;
+using DevCars.API.Entities;
 using DevCars.API.InputModels;
 using DevCars.API.Presistence;
 using DevCars.API.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,22 +13,48 @@ using System.Threading.Tasks;
 
 namespace DevCars.API.Controllers
 {
+    /// <summary>
+    /// Cadastrar um carros
+    /// </summary>
+    /// <remarks>
+    /// Requisição de exemplo
+    /// {
+    ///     "brand":"Toyota",
+    ///     "model":"Civic",
+    ///     "vinCode":"abc123",
+    ///     "year":2021,
+    ///     "color":"Ciza",
+    ///     "productionDate":"2021-05-04"
+    /// }
+    /// </remarks>
+    /// <param>Dados do carro </param>
+    /// <return>Objeto recém-criado</return>
+    /// <response code="201" >Objeto criado com sucesso</response>
+    /// <response code="404" >Dados invalidos</response>
     [Route("api/cars")]
     public class CarsController : ControllerBase
     {
         private readonly DevCarsDbContext _dbContext;
-        public CarsController(DevCarsDbContext context)
+        private readonly string _connetionsString;
+        public CarsController(DevCarsDbContext context,IConfiguration configuration)
         {
+            _connetionsString = configuration.GetConnectionString("DevCarsCs");
             _dbContext = context;
         }
         [HttpGet]
         public IActionResult Get()
         {
-            var cars = _dbContext.Cars;
-            var carViewModel = cars
-                .Select(c => new CarItemViewModel(c.id, c.Brand, c.Model, c.Price))
-                .ToList();
-            return Ok(carViewModel);
+            //var cars = _dbContext.Cars;
+            //var carViewModel = cars
+            //    .Select(c => new CarItemViewModel(c.id, c.Brand, c.Model, c.Price))
+            //    .ToList();
+            using (var sqlConnection =new SqlConnection(_connetionsString))
+            {
+                var query = "select Id,Brand,ModelPrice from Cars where Status=0;";
+                var carViewModel = sqlConnection.Query<CarItemViewModel>(query);
+                return Ok(carViewModel);
+            }
+            
         }
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
@@ -62,8 +91,13 @@ namespace DevCars.API.Controllers
                 return NotFound();
             }
             car.Update(model.Price, model.Color);
-            _dbContext.SaveChanges();
-            return NoContent();
+            using (var sqlConnection = new SqlConnection(_connetionsString))
+            {
+                var query = "Update Cars set Color=@color,Price=Price where Id=@id";
+                 sqlConnection.Execute(query,new { color = model.Color, price = model.Price, car.id });
+            }
+                // _dbContext.SaveChanges();
+                return NoContent();
         }
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)

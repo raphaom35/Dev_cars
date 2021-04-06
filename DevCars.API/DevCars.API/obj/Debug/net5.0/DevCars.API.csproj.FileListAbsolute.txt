@@ -60,3 +60,6 @@ D:\Cursos\.net_core_api\DevCars.API\DevCars.API\obj\Debug\net5.0\DevCars.API.dll
 D:\Cursos\.net_core_api\DevCars.API\DevCars.API\obj\Debug\net5.0\ref\DevCars.API.dll
 D:\Cursos\.net_core_api\DevCars.API\DevCars.API\obj\Debug\net5.0\DevCars.API.pdb
 D:\Cursos\.net_core_api\DevCars.API\DevCars.API\obj\Debug\net5.0\DevCars.API.genruntimeconfig.cache
+D:\Cursos\.net_core_api\DevCars.API\DevCars.API\bin\Debug\net5.0\Dapper.dll
+D:\Cursos\.net_core_api\DevCars.API\DevCars.API\bin\Debug\net5.0\DevCars.API.xml
+D:\Cursos\.net_core_api\DevCars.API\DevCars.API\obj\Debug\net5.0\DevCars.API.xml
